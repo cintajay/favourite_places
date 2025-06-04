@@ -1,10 +1,24 @@
+import 'package:favourite_places/screens/add_place.dart';
 import 'package:flutter/material.dart';
 
-class Home extends StatelessWidget {
-  const Home({super.key});
+class HomeScreen extends StatelessWidget {
+  const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    void addNew() {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const AddPlaceScreen()),
+      );
+    }
+    return Scaffold (
+      appBar: AppBar(
+        title: Text("Your Places"),
+        actions: [
+          IconButton(onPressed: addNew, icon: Icon(Icons.add))
+        ],
+      ),
+    );
   }
 }
