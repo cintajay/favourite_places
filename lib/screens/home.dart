@@ -19,6 +19,9 @@ class HomeScreen extends StatelessWidget {
           IconButton(onPressed: addNew, icon: Icon(Icons.add))
         ],
       ),
+      body: ListView.builder(itemBuilder: (context, index) {
+        return Placeholder();
+      },),
     );
   }
 }
