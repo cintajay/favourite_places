@@ -1,5 +1,6 @@
 import 'package:favourite_places/models/place.dart';
 import 'package:favourite_places/providers/places.dart';
+import 'package:favourite_places/widgets/image_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -26,7 +27,7 @@ class _AddPlaceScreenState extends ConsumerState<AddPlaceScreen> {
       appBar: AppBar(
         title: Text("Add New Places")        
       ),
-      body: Padding(
+      body: SingleChildScrollView(
         padding: const EdgeInsets.all(12),
         child: Column(
           spacing: 20,
@@ -38,6 +39,7 @@ class _AddPlaceScreenState extends ConsumerState<AddPlaceScreen> {
                 color: Theme.of(context).colorScheme.onBackground,
               )
             ),
+            ImagePickerItem(),
             ElevatedButton.icon(
               onPressed: () {
                 ref
