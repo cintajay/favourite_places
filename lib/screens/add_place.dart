@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:favourite_places/models/place.dart';
 import 'package:favourite_places/providers/places.dart';
 import 'package:favourite_places/widgets/image_picker.dart';
@@ -14,6 +15,20 @@ class AddPlaceScreen extends ConsumerStatefulWidget {
 //converted to Stateful to use TextEditingController
 class _AddPlaceScreenState extends ConsumerState<AddPlaceScreen> {
   final _textFieldController = TextEditingController();
+  File? _selectedImage;
+
+  void _savePlace() {
+    final enteredTitle = _textFieldController.text;
+
+    if (enteredTitle.isEmpty || _selectedImage == null) {
+      return;
+    }
+
+    ref
+      .read(placesListProvider.notifier)
+      .addPlace(Place(placeName: enteredTitle, image: _selectedImage!));
+    Navigator.pop(context);
+  }
 
   @override
   void dispose() {
@@ -39,14 +54,13 @@ class _AddPlaceScreenState extends ConsumerState<AddPlaceScreen> {
                 color: Theme.of(context).colorScheme.onBackground,
               )
             ),
-            ImagePickerItem(),
+            ImagePickerItem(
+              onPickImage: (image) {
+                _selectedImage = image;
+              }
+            ),
             ElevatedButton.icon(
-              onPressed: () {
-                ref
-                  .read(placesListProvider.notifier)
-                  .addPlace(Place(placeName: _textFieldController.text));
-                Navigator.pop(context);
-              },
+              onPressed: _savePlace,
               icon: const Icon(Icons.add),
               label: const Text('Add Place'),
             ),
