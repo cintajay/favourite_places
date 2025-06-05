@@ -1,10 +1,13 @@
+import 'package:favourite_places/models/place.dart';
+import 'package:favourite_places/providers/places.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class AddPlaceScreen extends StatelessWidget {
+class AddPlaceScreen extends ConsumerWidget {
   const AddPlaceScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       appBar: AppBar(
         title: Text("Add New Places")        
@@ -16,7 +19,11 @@ class AddPlaceScreen extends StatelessWidget {
           children: [            
             TextField(decoration: InputDecoration(labelText: "Title"),),
             ElevatedButton.icon(
-              onPressed: () {},
+              onPressed: () {
+                ref
+                  .read(placesListProvider.notifier)
+                  .addPlace(Place(placeName: "new Place"));
+              },
               icon: const Icon(Icons.add),
               label: const Text('Add Place'),
             ),

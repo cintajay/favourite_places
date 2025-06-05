@@ -1,11 +1,14 @@
+import 'package:favourite_places/providers/places.dart';
 import 'package:favourite_places/screens/add_place.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final placesList = ref.watch(placesListProvider);
     void addNew() {
       Navigator.push(
         context,
@@ -19,9 +22,12 @@ class HomeScreen extends StatelessWidget {
           IconButton(onPressed: addNew, icon: Icon(Icons.add))
         ],
       ),
-      body: ListView.builder(itemBuilder: (context, index) {
-        return Placeholder();
-      },),
+      body: ListView.builder(
+        itemCount: placesList.length,
+        itemBuilder: (context, index) {
+          return Text(placesList[index].placeName);
+        },
+      )
     );
   }
 }
