@@ -30,16 +30,29 @@ class _ImagePickerItemState extends State<ImagePickerItem> {
 
   @override
   Widget build(BuildContext context) {
-    return _selectedImage == null
-        ? TextButton.icon(
+    Widget content = TextButton.icon(
           onPressed: _openCamera,
           icon: const Icon(Icons.camera),
           label: const Text('Take Picture'),
-        )
-        : Container(height: 250,
+        );
+
+    if (_selectedImage != null) {
+      content = GestureDetector(
+          onTap: _openCamera,
+          child: Image.file(
+            _selectedImage!, 
+            fit: BoxFit.cover,
+            width: double.infinity,
+        ),
+      );
+    }
+
+    return Container(
+        height: 250,
         width: double.infinity,
-        alignment: Alignment.center, 
-        child: Image.file(_selectedImage!)
+        alignment: Alignment.center,
+        decoration: BoxDecoration(border: Border.all(color: Theme.of(context).colorScheme.primary.withOpacity(0.2))),
+        child: content
     );
   }
 }
