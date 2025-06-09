@@ -13,8 +13,16 @@ class PlaceItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(16),
-      child: Text(place.placeName,
-        style: Theme.of(context).textTheme.titleLarge!.copyWith(color: Theme.of(context).colorScheme.onBackground)
+      child: ListTile(
+        leading: CircleAvatar(
+          radius: 26,
+          backgroundImage: FileImage(place.image),
+        ),
+        title: Text(place.placeName,
+          style: Theme.of(context).textTheme.titleLarge!.copyWith(
+            color: Theme.of(context).colorScheme.onBackground,
+          ),
+        ),
       ),
     );
   }
