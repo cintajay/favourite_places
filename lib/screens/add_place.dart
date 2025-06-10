@@ -17,17 +17,18 @@ class AddPlaceScreen extends ConsumerStatefulWidget {
 class _AddPlaceScreenState extends ConsumerState<AddPlaceScreen> {
   final _textFieldController = TextEditingController();
   File? _selectedImage;
+  PlaceLocation? _selectedLocation;
 
   void _savePlace() {
     final enteredTitle = _textFieldController.text;
 
-    if (enteredTitle.isEmpty || _selectedImage == null) {
+    if (enteredTitle.isEmpty || _selectedImage == null || _selectedLocation == null) {
       return;
     }
 
     ref
       .read(placesListProvider.notifier)
-      .addPlace(Place(placeName: enteredTitle, image: _selectedImage!));
+      .addPlace(Place(placeName: enteredTitle, image: _selectedImage!, location: _selectedLocation!));
     Navigator.pop(context);
   }
 
@@ -60,7 +61,9 @@ class _AddPlaceScreenState extends ConsumerState<AddPlaceScreen> {
                 _selectedImage = image;
               }
             ),
-            LocationPickerItem(),
+            LocationPickerItem(onSetLocation: (location) {
+              _selectedLocation = location;
+            }),
             ElevatedButton.icon(
               onPressed: _savePlace,
               icon: const Icon(Icons.add),

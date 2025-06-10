@@ -8,7 +8,9 @@ import 'package:location/location.dart';
 import 'package:http/http.dart' as http;
 
 class LocationPickerItem extends StatefulWidget {
-  const LocationPickerItem({super.key});
+  const LocationPickerItem({super.key, required this.onSetLocation});
+
+  final void Function(PlaceLocation location) onSetLocation;
 
   @override
   State<LocationPickerItem> createState() => _LocationPickerState();
@@ -71,6 +73,8 @@ class _LocationPickerState extends State<LocationPickerItem> {
       );
       _isLoading = false;
     });
+
+    widget.onSetLocation(_pickedLocation!);
   }
 
   @override
