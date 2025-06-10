@@ -9,9 +9,9 @@ class Place {
 }
 
 class PlaceLocation {
-  PlaceLocation({required this.latitude, required this.longitude, required this.address});
+  const PlaceLocation({required this.latitude, required this.longitude, required this.address}); //added const here to use const PlaceLocation in MapsScreen
 
-  final double? latitude;
-  final double? longitude;
+  final double latitude;
+  final double longitude;
   final String address;
 }

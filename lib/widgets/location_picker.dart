@@ -66,8 +66,8 @@ class _LocationPickerState extends State<LocationPickerItem> {
 
     setState(() {
       _pickedLocation = PlaceLocation(
-        latitude: lat,
-        longitude: lng,
+        latitude: lat!,
+        longitude: lng!,
         address: address
       );
       _isLoading = false;
