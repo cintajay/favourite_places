@@ -1,5 +1,11 @@
+import 'dart:convert';
+import 'dart:ffi';
+
+import 'package:favourite_places/environment_variables.dart';
+import 'package:favourite_places/models/place.dart';
 import 'package:flutter/material.dart';
 import 'package:location/location.dart';
+import 'package:http/http.dart' as http;
 
 class LocationPickerItem extends StatefulWidget {
   const LocationPickerItem({super.key});
@@ -10,6 +16,16 @@ class LocationPickerItem extends StatefulWidget {
 
 class _LocationPickerState extends State<LocationPickerItem> {
   bool _isLoading = false;
+  PlaceLocation? _pickedLocation;
+  
+  String get locationImage {
+    if (_pickedLocation == null) {
+      return '';
+    }
+    final lat = _pickedLocation!.latitude;
+    final lng = _pickedLocation!.longitude;
+    return 'https://maps.googleapis.com/maps/api/staticmap?center=$lat,$lng&zoom=14&size=600x300&maptype=roadmap&markers=color:red%7C$lat,$lng&key=$API_KEY';
+  }
 
   void _getCurrentLocation() async {
     Location location = Location();
@@ -39,16 +55,37 @@ class _LocationPickerState extends State<LocationPickerItem> {
   });
 
     locationData = await location.getLocation();
-    print("locationData=$locationData");
+    final lat = locationData.latitude;
+    final lng = locationData.longitude;
+
+    final url = Uri.parse(
+        'https://maps.googleapis.com/maps/api/geocode/json?latlng=$lat,$lng&key=$API_KEY');
+    final response = await http.get(url);
+    final resData = jsonDecode(response.body);
+    final address = resData['results'][0]['formatted_address'];
 
     setState(() {
+      _pickedLocation = PlaceLocation(
+        latitude: lat,
+        longitude: lng,
+      );
       _isLoading = false;
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    Widget noLocation = Text("No location chosen", style: TextStyle(color: Theme.of(context).colorScheme.primary),);
+    Widget content =
+        _pickedLocation != null
+            ? Image.network(
+              locationImage,
+              width: double.infinity,
+              fit: BoxFit.cover,
+            )
+            : Text(
+              "No location chosen",
+              style: TextStyle(color: Theme.of(context).colorScheme.primary),
+            );
 
     return Column(
       children: [
@@ -57,7 +94,7 @@ class _LocationPickerState extends State<LocationPickerItem> {
         width: double.infinity,
         alignment: Alignment.center,
         decoration: BoxDecoration(border: Border.all(color: Theme.of(context).colorScheme.primary.withOpacity(0.2))),
-        child: _isLoading ? const CircularProgressIndicator() : noLocation
+        child: _isLoading ? const CircularProgressIndicator() : content
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
