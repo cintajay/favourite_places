@@ -1,6 +1,4 @@
 import 'dart:convert';
-import 'dart:ffi';
-
 import 'package:favourite_places/environment_variables.dart';
 import 'package:favourite_places/models/place.dart';
 import 'package:flutter/material.dart';
@@ -70,6 +68,7 @@ class _LocationPickerState extends State<LocationPickerItem> {
       _pickedLocation = PlaceLocation(
         latitude: lat,
         longitude: lng,
+        address: address
       );
       _isLoading = false;
     });
