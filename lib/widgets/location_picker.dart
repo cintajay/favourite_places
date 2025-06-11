@@ -1,7 +1,9 @@
 import 'dart:convert';
 import 'package:favourite_places/environment_variables.dart';
 import 'package:favourite_places/models/place.dart';
+import 'package:favourite_places/screens/map.dart';
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 import 'package:http/http.dart' as http;
 
@@ -57,7 +59,21 @@ class _LocationPickerState extends State<LocationPickerItem> {
     locationData = await location.getLocation();
     final lat = locationData.latitude;
     final lng = locationData.longitude;
+    _setPlaceLocation(lat!, lng!);
 
+  }
+
+  void _openMapScreen() async {
+    final markedLocation = await Navigator.push<LatLng>(context, MaterialPageRoute(builder: (ctx) { //add async await when the response is a Future
+      return const MapScreen();
+    },));
+    if (markedLocation == null) {
+      return;
+    }
+    _setPlaceLocation(markedLocation.latitude, markedLocation.longitude); //.push<LatLng> to change type of markedLocation from dynamic to LatLng
+  }
+
+  void _setPlaceLocation(double lat, double lng) async { //Future return type is used in the course instead of void
     final url = Uri.parse(
         'https://maps.googleapis.com/maps/api/geocode/json?latlng=$lat,$lng&key=$API_KEY');
     final response = await http.get(url);
@@ -66,8 +82,8 @@ class _LocationPickerState extends State<LocationPickerItem> {
 
     setState(() {
       _pickedLocation = PlaceLocation(
-        latitude: lat!,
-        longitude: lng!,
+        latitude: lat,
+        longitude: lng,
         address: address
       );
       _isLoading = false;
@@ -103,7 +119,7 @@ class _LocationPickerState extends State<LocationPickerItem> {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             TextButton.icon(onPressed: _getCurrentLocation, label: Text("Get Current Location"), icon: Icon(Icons.pin_drop,)),
-            TextButton.icon(onPressed: () {}, label: Text("Select On Map"), icon: Icon(Icons.map,))
+            TextButton.icon(onPressed: _openMapScreen, label: Text("Select On Map"), icon: Icon(Icons.map,))
           ],
         )
       ],

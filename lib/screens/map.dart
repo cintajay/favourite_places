@@ -31,7 +31,7 @@ class _MapScreenState extends State<MapScreen> {
       appBar: AppBar(
           title: Text(widget.isSelecting ? 'Pick your Location' : 'Your Location'),
           actions: [
-            if (widget.isSelecting)
+            if (widget.isSelecting) //to not allow save when opened from place_details
               IconButton(
                 icon: const Icon(Icons.save),
                 onPressed: () {
@@ -40,7 +40,7 @@ class _MapScreenState extends State<MapScreen> {
               ),
           ]),
       body: GoogleMap(
-        onTap: !widget.isSelecting
+        onTap: !widget.isSelecting //to not allow tap when opened from place_details
             ? null
             : (position) {
                 setState(() {
