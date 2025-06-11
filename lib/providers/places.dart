@@ -1,6 +1,8 @@
 import 'dart:io';
 import 'package:favourite_places/models/place.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:path/path.dart' as path;
+import 'package:path_provider/path_provider.dart' as syspaths;
 import 'package:sqflite/sqflite.dart' as sql;
 import 'package:sqflite/sqlite_api.dart';
 
@@ -38,7 +40,23 @@ class PlacesNotifier extends StateNotifier<List<Place>> {
     state = places;
   }
 
-  void addPlace(Place place) { //method to change the List<Place>
+  void addPlace(Place place) async { //method to change the List<Place>
+    final appDir = await syspaths.getApplicationDocumentsDirectory();
+    final filename = path.basename(place.image.path);
+    final copiedImage = await place.image.copy('${appDir.path}/$filename');
+    final newPlace =
+        Place(placeName: place.placeName, image: copiedImage, location: place.location); //new object with copiedImage
+
+    final db = await _getDatabase();
+    db.insert('user_places', {
+      'id': newPlace.id,
+      'title': newPlace.placeName,
+      'image': newPlace.image.path,
+      'lat': newPlace.location.latitude,
+      'lng': newPlace.location.longitude,
+      'address': newPlace.location.address,
+    });
+
     state = [
       ...state,
       place
