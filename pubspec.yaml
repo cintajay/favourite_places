@@ -40,6 +40,10 @@ dependencies:
   location: ^8.0.0
   http: ^1.4.0
   google_maps_flutter: ^2.12.2
+  path_provider: ^2.1.5 #gives path for storing data on different OS's
+  path: ^1.9.1 #gives path name of the taken image
+  sqflite: ^2.4.2
+  uuid: ^4.5.1
 
 dev_dependencies:
   flutter_test:
