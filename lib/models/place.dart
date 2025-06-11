@@ -7,7 +7,8 @@ class Place {
     required this.placeName,
     required this.image,
     required this.location,
-  }) : id = Uuid().v4();
+    String? id
+  }) : id = id ?? Uuid().v4(); //when place is loaded from db, id is copied. Otherwise id is created here using pkg
 
   final String placeName;
   final File image;

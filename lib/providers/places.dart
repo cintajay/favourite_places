@@ -7,7 +7,9 @@ import 'package:sqflite/sqflite.dart' as sql;
 import 'package:sqflite/sqlite_api.dart';
 
 Future<Database> _getDatabase() async {
-final db = await sql.openDatabase('places.db', 
+final dbPath = await sql.getDatabasesPath();
+final db = await sql.openDatabase(
+    path.join(dbPath, 'places.db'), //db path joined with db name
     onCreate: (db, version) {
       db.execute('CREATE TABLE user_places(id TEXT PRIMARY KEY, title TEXT, image TEXT, lat REAL, lng REAL, address TEXT)');
     },
@@ -26,7 +28,7 @@ class PlacesNotifier extends StateNotifier<List<Place>> {
     final places = data
         .map(
           (row) => Place(
-            id: row['id'] as String,
+            id: row['id'] as String, //Place always creates a new id so we added logic there to not create new id when fetched from db
             placeName: row['title'] as String,
             image: File(row['image'] as String),
             location: PlaceLocation(
